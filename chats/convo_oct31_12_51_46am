@@ -1,0 +1,43 @@
+{
+    "ai_settings": {
+        "model": "gpt-4",
+        "max_tokens": 8000,
+        "tempurature": 0.7
+    },
+    "prompts": {
+        "default_prompt": "How may I help you?",
+        "system_prompt": "You are a helpful assistant named YaCaCa"
+    },
+    "conversation": [
+        {
+            "role": "assistant",
+            "content": "Hello. How may I help you today",
+            "date": "2023-10-31",
+            "time": "00:52:52.005033"
+        },
+        {
+            "role": "user",
+            "content": "I'm creating a default chat for my new app. Could you outline 3 steps to get me started creating a streamlit app? ",
+            "date": "2023-10-31",
+            "time": "00:52:52.005050"
+        },
+        {
+            "role": "assistant",
+            "content": "Certainly! Here are three steps to get you started creating a Streamlit app:\n\nStep 1: Install Streamlit\n- Make sure you have Python installed on your computer.\n- Open the terminal or command prompt.\n- Install Streamlit by running the following command: `pip install streamlit`\n\nStep 2: Create a Python script for your app\n- Create a new Python file (.py) using your preferred code editor.\n- Import the Streamlit module using `import streamlit as st`.\n- Start building your app by writing Python code to define the layout and functionality.\n\nStep 3: Run the app\n- Save the Python script.\n- Open the terminal or command prompt and navigate to the folder where the script is saved.\n- Run the app by executing the command: `streamlit run script_name.py` (replace \"script_name\" with the actual name of your Python script).\n- A local server will be started, and you can view your app in your web browser at the specified local address (usually http://localhost:8501).\n\nThese steps will help you get started with creating a basic Streamlit app. From there, you can explore the Streamlit documentation and add more features and functionality to your app as needed.",
+            "date": "2023-10-31",
+            "time": "00:52:52.005062"
+        },
+        {
+            "role": "user",
+            "content": "Thanks. This has been a lovely chat :)",
+            "date": "2023-10-31",
+            "time": "00:52:52.005072"
+        },
+        {
+            "role": "assistant",
+            "content": "You're welcome! I'm glad I could help. If you have any more questions in the future, feel free to ask. Have a great day!",
+            "date": "2023-10-31",
+            "time": "00:52:52.005082"
+        }
+    ]
+}

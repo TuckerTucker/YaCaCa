@@ -1,0 +1,6 @@
+.DS_Store
+.OAI_KEY
+
+# Python bytecode files
+__pycache__
+*.pyc
