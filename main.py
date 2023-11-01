@@ -86,7 +86,7 @@ if prompt := st.chat_input(st.session_state.prompts.get("default_prompt")):
     for response in openai.ChatCompletion.create(
         model=st.session_state.ai_settings["model"],
         messages=oai_messages,
-        max_tokens=max_tokens,
+        max_tokens=1024,
         stream=True,
     ):
         full_response += response.choices[0].delta.get("content", "")

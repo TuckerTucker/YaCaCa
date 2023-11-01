@@ -1,6 +1,10 @@
 .DS_Store
 .OAI_KEY
+.qdrant_key
 
 # Python bytecode files
 __pycache__
 *.pyc
+
+convo_vdb
+vdb.py
