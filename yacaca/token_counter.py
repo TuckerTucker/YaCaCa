@@ -16,7 +16,9 @@ def num_tokens_from_messages(messages, model="gpt-3.5-turbo"):
     for message in messages:
         num_tokens += tokens_per_message
         for key, value in message.items():
-            num_tokens += len(encoding.encode(value))
+            # Ensure value is a string before encoding
+            if isinstance(value, str):
+                num_tokens += len(encoding.encode(value))
             if key == "name":
                 num_tokens += tokens_per_name
 
