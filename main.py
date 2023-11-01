@@ -99,6 +99,6 @@ if prompt := st.chat_input(st.session_state.prompts.get("default_prompt")):
     # Update chat history
     update_chat_history_to_file(st.session_state.filename, st.session_state.messages)
 
-# text
-if all(key in st.session_state for key in ["long_convo_msg"]):
-    st.markdown(st.session_state.long_convo_msg)
+# the longconvo message
+# if all(key in st.session_state for key in ["long_convo_msg"]):
+#    st.markdown(st.session_state.long_convo_msg)
