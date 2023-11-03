@@ -1,0 +1,6 @@
+qdrant-client
+argparse
+json
+streamlit
+openai
+datetime

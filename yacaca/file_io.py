@@ -6,7 +6,7 @@ def load_chat_history_from_file(filename):
     filename = "./chats/" + filename
     with open(filename, "r") as f:
         data = json.loads(f.read())
-        return data["conversation"], data["prompts"], data["ai_settings"]
+        return data["conversation"], data["prompts"], data["ai_settings"], data["qdrant"]
 
 def update_chat_history_to_file(filename, messages):
     # Load existing data
@@ -38,4 +38,4 @@ def load_default_chat():
     with open("./chats/" + filename, "w") as f:
         f.write(json.dumps(data))
 
-    return {"messages": data["conversation"], "prompts": data["prompts"], "filename": filename, "ai_settings": data["ai_settings"] }
+    return {"messages": data["conversation"], "prompts": data["prompts"], "filename": filename, "ai_settings": data["ai_settings"], "qdrant": data["qdrant"] }
