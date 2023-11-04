@@ -1,6 +1,6 @@
 qdrant-client
 argparse
-json
+tiktoken
 streamlit
 openai
 datetime
