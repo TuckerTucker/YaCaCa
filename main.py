@@ -8,9 +8,8 @@ from datetime import datetime
 # Local Imports
 from yacaca.token_counter import num_tokens_from_messages
 from yacaca.file_io import load_default_chat, load_chat_history_from_file, update_chat_history_to_file
-from yacaca.oai import oai_init, getEmbedding
+from yacaca.oai import oai_init
 from yacaca.ui_messages import ui_messages
-from yacaca.qdrant import findSimilar
 
 # Parse the CLI arguments
 parser = argparse.ArgumentParser(description = "Load chat history.")
@@ -27,13 +26,12 @@ def load_default_to_session_state():
     st.session_state.prompts = default_conversation["prompts"]
     st.session_state.filename = default_conversation["filename"]
     st.session_state.ai_settings = default_conversation["ai_settings"]
-    st.session_state.qdrant = default_conversation["qdrant"]
 
 # Check session state
 if not all(key in st.session_state for key in ["messages", "prompts", "filename"]):
     if args.load_chat:
         try:
-            st.session_state.messages, st.session_state.prompts, st.session_state.ai_settings, st.session_state.qdrant = load_chat_history_from_file(args.load_chat)
+            st.session_state.messages, st.session_state.prompts, st.session_state.ai_settings = load_chat_history_from_file(args.load_chat)
             st.session_state.filename = args.load_chat
 
         except FileNotFoundError:
@@ -85,38 +83,36 @@ if prompt := st.chat_input(st.session_state.prompts.get("default_prompt")):
     # Add the user's prompt to oai_messages
     oai_messages.append({"role": "user", "content": prompt})
 
-    # Convert oai_messages list to a string of messages
-    context_prompt = ' | '.join([f"{message['role']}: {message['content']}" for message in oai_messages])
-
-    # Set up qdrant arguments
-    contextEmbedding = getEmbedding(context_prompt)
-    theCollection = st.session_state.filename
-    qdrantHost = st.session_state.qdrant["cluster_url"]
-    
-    # Get the context docs
-    theContext = findSimilar(contextEmbedding, theCollection, qdrantHost)
-    
-    # create context message
-    context_message = {"role": "system", "content": f"you are a friendly assistant. Here is some context from the qdrant database | {theContext}"}
-    
-    # Insert context_message at the beginning of the messages list
-    oai_messages.insert(0, context_message)
-    full_prompt = oai_messages
-
     full_response = ""
     # call openai to get the response
-    for response in openai.ChatCompletion.create(
+    for response in openai.chat.completions.create(
         model = st.session_state.ai_settings["model"],
-        messages = full_prompt,
+        messages = oai_messages,
         max_tokens = 1024,
         stream = True,
-    ):
-        # display the response as it streams in
-        full_response +=  response.choices[0].delta.get("content", "")
-        message_placeholder.markdown(full_response + "▌")
-        message_placeholder.markdown(full_response)
+    ): # Check for None before concactenating
+        if response.choices[0].delta.content is not None:
+            # Extract the content from the response
+            content = response.choices[0].delta.content
+        else:
+            content = ""   
 
-    # add the full response to the full messages list
+        # Append the content to the full response
+        full_response += content
+        # Display the response as it streams in
+        message_placeholder.markdown(full_response + "▌")
+
+        # Check the finish_reason
+        finish_reason = response.choices[0].finish_reason
+        if finish_reason == 'stop':
+            # If the finish_reason is 'stop', break the loop
+            break
+        elif finish_reason == 'length':
+            # If the finish_reason is 'length', display a message to the user
+            st.warning("The response was cut-off due to length.")
+
+    # Add the full response to the full messages list
+    message_placeholder.markdown(full_response)
     st.session_state.messages.append({"role": "assistant", "content": full_response})
 
     # Update chat history
